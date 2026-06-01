@@ -1,172 +1,437 @@
-# TODO - Migração para PHP 8 / Clean Code / PSR
+# TODO - Migracao para PHP 8 / Clean Code / PSR
 
 ## Objetivo
-Atualizar o projeto `SocialSaude` para PHP 8, adotando princípios de Clean Code e padrões PSR (PSR-1, PSR-12, PSR-4) progressivamente. O foco inicial é criar um plano de migração, identificar os principais pontos de risco e anotar os caminhos de alteração necessários.
+
+Atualizar o projeto `SocialSaude` / `WebSocialComum` para PHP 8, adotando Clean Code e padroes PSR de forma progressiva, sem tentar reescrever todo o legado de uma vez.
+
+O foco da migracao e:
+
+- [ ] manter o sistema legado funcionando durante a transicao;
+- [ ] criar uma fundacao moderna em `src/`;
+- [ ] reduzir riscos criticos de seguranca;
+- [ ] migrar regras e modulos aos poucos;
+- [ ] aplicar PSR-1, PSR-4 e PSR-12 nos arquivos novos e refatorados;
+- [ ] criar testes para proteger os fluxos migrados.
 
 ---
 
-## 1. Auditoria geral e primeiros passos
+## Fase 0 - Inventario e controle inicial
 
-- Criar um `composer.json` na raiz do projeto com PHP mínimo `^8.0` ou `^8.1`.
-- Definir autoload PSR-4 para novos componentes e classes.
-- Adotar `declare(strict_types=1);` em novos arquivos e gradualmente nos módulos refatorados.
-- Adicionar ferramentas de qualidade:
-  - `phpcs` com `PSR12`
-  - `phpstan` / `psalm`
-  - `php-cs-fixer`
-- Converter a base de inclusão de arquivos para uso de paths absolutos e/ou dependências injetadas, evitando `$_SESSION['root']`, `$_SESSION['modulo']` e strings de caminho espalhadas.
-- Definir um arquivo de bootstrap compartilhado para configuração e autoload.
+### Diagnostico do estado atual
 
----
+- [x] Identificar que o projeto e um legado PHP procedural com PostgreSQL e muitos arquivos na raiz.
+- [x] Identificar dependencia externa/legada com `WebSocialComum`.
+- [x] Identificar uso extenso de `pg_query()`.
+- [x] Identificar presenca de Zend Framework antigo em `zf/`.
+- [x] Identificar que `composer.json` foi criado como ponto de partida da migracao.
+- [ ] Confirmar versao PHP atual usada em producao.
+- [ ] Confirmar versao PHP alvo da primeira etapa (`^8.0`, `^8.1` ou superior).
+- [ ] Confirmar versao do PostgreSQL usada em producao.
+- [ ] Confirmar encoding oficial esperado pelo banco (`LATIN1`, `WIN1252`, `UTF8` ou misto).
+- [ ] Documentar a estrutura esperada entre `WebSocialSaude` e `WebSocialComum`.
+- [ ] Mapear quais diretorios sao codigo proprio e quais sao bibliotecas de terceiros vendorizadas.
 
-## 2. Arquivos de bootstrap, sessão e configuração
+### Git e organizacao do repositorio
 
-- `global.php`
-  - Substituir `__autoload()` por `spl_autoload_register()`.
-  - Remover definições globais diretas e usar constantes ou classes de configuração.
-- `funcoes.db.php`
-  - Mover a lógica de banco de dados para uma classe `Database` ou `PgDatabase`.
-  - Remover o uso de `@` para supressão de erros.
-  - Evitar `pg_query()` com SQL concatenado; use prepared statements sempre que possível.
-- `funcoes.inc.php`
-  - Refatorar funções utilitárias para classes estáticas ou serviços.
-  - Remover variáveis globais implícitas.
-- `config.inc.php`
-  - Consolidar configurações num único objeto/array de configuração.
+- [ ] Criar ou revisar `.gitignore`.
+- [ ] Decidir se `vendor/` deve ficar versionado ou ser instalado via Composer.
+- [ ] Decidir se bibliotecas legadas internas devem permanecer no repositorio.
+- [ ] Adicionar `composer.lock` depois da primeira instalacao controlada das dependencias.
+- [ ] Separar alteracoes de infraestrutura em commits pequenos.
 
 ---
 
-## 3. Funções PHP removidas no PHP 8
+## Fase 1 - Pacote zero da fundacao moderna
 
-### Substituições obrigatórias
-- `session_register()` -> `$_SESSION['login'] = ...`
-  - `auth_pass.Val.php`
-  - `auth_pass.Erro.php`
-- `get_magic_quotes_gpc()` -> não existe em PHP 8
-  - `app-saude-profissional.php`
-  - `app-saude-cidadao.php`
-- `split()` -> `explode()` ou `preg_split()`
-  - `calendario.inc.php`
-  - `apac_print_sesgunda_via.php`
-  - `apac_print_.php`
-  - `hiperdia/geralHiperdia.php`
-  - possivelmente outros arquivos antigos
-- `ereg_replace()` / `ereg()` -> `preg_replace()` / `preg_match()`
-  - `e-sus-on/ThriftCidadao.php`
-  - `e-sus/ThriftCidadao.php`
-- `create_function()` -> closures ou funções nomeadas
-  - varrer o repositório para presença dessa função
-- `preg_replace(..., '...e...')` -> usar `preg_replace_callback()` ou outra lógica segura
-- `eval()` em PHP e em templates gerados por PHP (grave risco de segurança)
-  - `agendar_exame.php`
-  - `medico.php`
-  - `exame/buscaDatasDisponiveis.php`
-  - `cad_lista_espera.php`
-  - `fazer_agendamento.js.php`
-  - `exame/exa_agendamento.js.php`
-  - `farmacia/far_agendamento.js.php`
-  - demais arquivos com `eval()` encontrado pela auditoria
+### Composer e autoload
 
-### Ajustes de sintaxe e tags PHP
-- Converter `<?` para `<?php` onde possível.
-- Revisar `<?=` e garantir que está sendo usado apenas para saída segura.
-- Evitar misturar HTML e PHP em larga escala; extrair views ou templates gradualmente.
+- [x] Criar `composer.json` na raiz do projeto.
+- [ ] Revisar requisito minimo de PHP no `composer.json`.
+- [ ] Definir autoload PSR-4 para `App\\` apontando para `src/`.
+- [ ] Definir autoload de testes para `App\\Tests\\` apontando para `tests/`.
+- [ ] Rodar `composer install`.
+- [ ] Validar `composer dump-autoload`.
 
----
+### Ferramentas de qualidade
 
-## 4. Path e estrutura de arquivos
+- [ ] Adicionar `phpcs.xml` com PSR-12 para `src/` e `tests/`.
+- [ ] Adicionar `phpstan.neon` com nivel inicial realista.
+- [ ] Adicionar configuracao do `php-cs-fixer`.
+- [ ] Adicionar PHPUnit ou Pest para testes novos.
+- [ ] Criar scripts Composer:
+  - [ ] `composer cs`
+  - [ ] `composer fix`
+  - [ ] `composer analyse`
+  - [ ] `composer test`
+- [ ] Rodar as ferramentas apenas em `src/` e `tests/` no inicio, evitando aplicar PSR no legado inteiro de uma vez.
 
-### Principais diretórios e módulos impactados
-- Raiz PHP do projeto: muitos arquivos legados de rota e controladores
-- `e-sus/`, `e-sus-on/`, `exportacao_esus/`
-  - integração com E-SUS e Thrift
-  - métodos antigos de parsing de strings e `ereg`
-- `zf/`
-  - já parece conter parte de uma aplicação mais estruturada
-- `api/`
-  - validação e estrutura de entrada de dados devem ser modernizadas
-- `docs/`
-  - atualizar documentação de instalação e migração
+### Estrutura inicial recomendada
 
-### Caminhos de alteração de dependências
-- Substituir includes dinâmicos com `$_SESSION[root]` e `$_SESSION[modulo]` por um arquivo bootstrap único.
-- Definir constantes de caminho como `SOCIAL_ROOT`, `COMUM_ROOT`, `SAUDE_ROOT` com `dirname(__FILE__)` ou `getcwd()`.
-- Avaliar se o layout em `WebSocialSaude/` deve ser separado em sub-diretórios de módulo.
+- [ ] Criar `src/`.
+- [ ] Criar `tests/`.
+- [ ] Criar estrutura base:
+
+```text
+src/
+  Core/
+    Auth/
+    Config/
+    Database/
+    Http/
+    Session/
+  Shared/
+    Exception/
+    Support/
+  Modules/
+    Usuario/
+    Paciente/
+    Agendamento/
+    Atendimento/
+    Farmacia/
+```
+
+- [ ] Adotar `declare(strict_types=1);` em todos os novos arquivos PHP.
+- [ ] Usar namespaces PSR-4 nos novos arquivos.
+- [ ] Evitar dependencias diretas de `$_SESSION`, `$_GET`, `$_POST` e `$_SERVER` dentro de classes de dominio.
 
 ---
 
-## 5. Arquivos de maior impacto para refatoração inicial
+## Fase 2 - Bootstrap, paths e configuracao
 
-- `auth.php`
-- `auth_pass.php`, `auth_pass.Val.php`, `auth_pass.Erro.php`
-- `global.php`
-- `funcoes.db.php`
-- `funcoes.inc.php`
-- `config.inc.php`
-- `calendario.inc.php`
-- `apac_print_sesgunda_via.php`
-- `apac_print_.php`
-- `e-sus-on/ThriftCidadao.php`
-- `e-sus/ThriftCidadao.php`
-- `hiperdia/geralHiperdia.php`
-- `agendar_exame.php`
-- `medico.php`
-- `exame/buscaDatasDisponiveis.php`
-- `cad_lista_espera.php`
-- `fazer_agendamento.js.php`
-- `exame/exa_agendamento.js.php`
-- `farmacia/far_agendamento.js.php`
-- `app-saude-cidadao.php`
-- `app-saude-profissional.php`
+### Bootstrap unico
 
-> Nota: este conjunto inicial é baseado em um escaneamento rápido por padrões de código legados.
+- [ ] Criar um bootstrap moderno para carregar Composer, configuracao e constantes de caminho.
+- [ ] Definir constantes de caminho:
+  - [ ] `SOCIAL_ROOT`
+  - [ ] `COMUM_ROOT`
+  - [ ] `SAUDE_ROOT`
+  - [ ] `APP_ROOT`
+- [ ] Reduzir uso de `$_SESSION['root']`, `$_SESSION['modulo']` e `$_SESSION['comum']` para paths de include.
+- [ ] Garantir que `session_start()` ocorra de forma controlada e apenas quando necessario.
 
----
+### Arquivos prioritarios
 
-## 6. Adoção de PSR e Clean Code
+- [ ] `global.php`
+  - [ ] Substituir `__autoload()` por `spl_autoload_register()`.
+  - [ ] Remover definicoes globais diretas quando houver alternativa segura.
+  - [ ] Conectar o arquivo ao bootstrap moderno gradualmente.
 
-- Migrar classes para namespaces e PSR-4 quando forem refatoradas.
-- Usar nomes de classes e métodos claros e consistentes.
-- Evitar métodos longos e fazer funções de responsabilidade única.
-- Preferir injeção de dependência a `global` e `$_SESSION` para objetos de serviço.
-- Extrair html, javascript e lógica de banco de dados para camadas separadas.
-- Centralizar validações e sanitização em serviços/utilitários.
+- [ ] `config.inc.php`
+  - [ ] Consolidar configuracoes em classe/array de configuracao.
+  - [ ] Separar configuracao de ambiente, banco, caminhos e constantes de negocio.
+
+- [ ] `sessao_controller.php`
+  - [ ] Isolar leitura de configuracao do banco.
+  - [ ] Evitar abrir nova conexao manual em cada instancia.
+  - [ ] Centralizar politica de expiracao da sessao.
 
 ---
 
-## 7. Segurança e robustez
+## Fase 3 - Banco de dados e camada de compatibilidade
 
-- Substituir `eval()` por parse seguro ou JSON.
-- Escapar toda saída HTML com `htmlspecialchars()` ou view helpers.
-- Usar CSRF tokens em formulários críticos.
-- Não concatenar variáveis diretamente em SQL: usar prepared statements.
-- Substituir `addslashes()` por mecanismos seguros de query.
-- Remover dependência de `@` para supressão de erro.
-- Garantir que `session_start()` ocorra uma vez e de forma controlada no bootstrap.
+### Nova camada de banco
+
+- [ ] Criar `App\Core\Database\PgConnection`.
+- [ ] Criar `App\Core\Database\PgDatabase`.
+- [ ] Suportar queries parametrizadas.
+- [ ] Padronizar tratamento de erro sem `die()`.
+- [ ] Remover uso de `@` para supressao de erro nos novos componentes.
+- [ ] Padronizar client encoding.
+- [ ] Criar excecoes especificas para erro de conexao e erro de query.
+
+### Compatibilidade com legado
+
+- [ ] Manter `funcoes.db.php` funcionando durante a migracao.
+- [ ] Fazer `funcoes.db.php` delegar gradualmente para a nova camada de banco.
+- [ ] Preservar assinatura de funcoes usadas pelo legado quando necessario:
+  - [ ] `db_query()`
+  - [ ] `db_getRow()`
+  - [ ] `db_get()`
+  - [ ] `db_parseFirstCommand()`
+- [ ] Trocar SQL concatenado por prepared statements primeiro nos fluxos criticos.
+
+### Arquivos prioritarios
+
+- [ ] `funcoes.db.php`
+  - [ ] Mover logica de banco para classe `PgDatabase`.
+  - [ ] Remover supressao com `@`.
+  - [ ] Evitar `pg_query()` com SQL interpolado.
+  - [ ] Trocar `die()` por excecao ou resposta controlada.
 
 ---
 
-## 8. Próximo ciclo de implementação
+## Fase 4 - Compatibilidade obrigatoria com PHP 8
 
-1. Criar `composer.json` e rodar `composer install`.
-2. Configurar autoload e `phpcs` / `phpstan`.
-3. Refatorar o bootstrap (`global.php`, `funcoes.db.php`, `config.inc.php`).
-4. Substituir funções removidas do PHP 8.
-5. Refatorar os primeiros módulos críticos de login e agendamento.
-6. Adicionar testes unitários e/ou de integração para os módulos migrados.
-7. Iterar módulo por módulo até a cobertura mínima.
+### Funcoes removidas ou perigosas
+
+- [ ] Substituir `session_register()` por `$_SESSION[...]`.
+  - [ ] `auth_pass.Val.php`
+  - [ ] `auth_pass.Erro.php`
+
+- [ ] Remover `get_magic_quotes_gpc()`.
+  - [ ] `app-saude-profissional.php`
+  - [ ] `app-saude-cidadao.php`
+
+- [ ] Substituir `split()` por `explode()` ou `preg_split()`.
+  - [ ] `calendario.inc.php`
+  - [ ] `apac_print_sesgunda_via.php`
+  - [ ] `apac_print_.php`
+  - [ ] `hiperdia/geralHiperdia.php`
+  - [ ] Varrer demais ocorrencias.
+
+- [ ] Substituir `ereg()` e `ereg_replace()` por `preg_match()` e `preg_replace()`.
+  - [ ] `e-sus-on/ThriftCidadao.php`
+  - [ ] `e-sus/ThriftCidadao.php`
+  - [ ] Varrer demais ocorrencias.
+
+- [ ] Substituir `create_function()` por closures ou funcoes nomeadas.
+- [ ] Substituir `preg_replace(..., '...e...')` por `preg_replace_callback()`.
+- [ ] Mapear todos os usos de `eval()`.
+- [ ] Substituir `eval()` por parse seguro, JSON, whitelist ou logica explicita.
+
+### Sintaxe e compatibilidade
+
+- [ ] Converter `<?` para `<?php` onde possivel.
+- [ ] Revisar `<?=` e garantir que seja usado apenas para saida segura.
+- [ ] Corrigir indices de array sem aspas, exemplo: `$_SESSION[root]`.
+- [ ] Corrigir acessos a variaveis indefinidas que viram warnings/notices relevantes.
+- [ ] Revisar funcoes que recebem `null` em parametros que nao aceitam mais `null` no PHP 8.
+- [ ] Revisar construtores antigos com nome da classe.
+- [ ] Revisar bibliotecas antigas incompatíveis com PHP 8.
+
+### Arquivos ja mapeados com risco
+
+- [ ] `agendar_exame.php`
+- [ ] `medico.php`
+- [ ] `exame/buscaDatasDisponiveis.php`
+- [ ] `cad_lista_espera.php`
+- [ ] `fazer_agendamento.js.php`
+- [ ] `exame/exa_agendamento.js.php`
+- [ ] `farmacia/far_agendamento.js.php`
+- [ ] `app-saude-cidadao.php`
+- [ ] `app-saude-profissional.php`
 
 ---
 
-## 9. Comandos de inspeção sugeridos
+## Fase 5 - Seguranca critica antes de refatoracao visual
 
-- `grep -R "session_register\|get_magic_quotes_gpc\|split(\|ereg_\|create_function\|eval(" .` 
-- `phpcs --standard=PSR12 --extensions=php .`
-- `phpstan analyse src tests --level=5`
-- `composer require --dev squizlabs/php_codesniffer phpstan/phpstan phpunit/phpunit`
+### SQL Injection
+
+- [ ] Priorizar arquivos de login, API e escrita no banco.
+- [ ] Substituir SQL interpolado por prepared statements.
+- [ ] Remover uso de `addslashes()` como defesa de SQL.
+- [ ] Validar entrada por tipo antes de consultar o banco.
+
+### Autenticacao e senha
+
+- [ ] Revisar `auth.php`.
+- [ ] Revisar `auth_pass.php`.
+- [ ] Revisar `authlib.inc.php`.
+- [ ] Revisar `api/login.php`.
+- [ ] Planejar migracao de senha `MD5` para `password_hash()` / `password_verify()`.
+- [ ] Criar estrategia de migracao gradual de senhas no login.
+- [ ] Evitar retornar dados sensiveis em APIs.
+
+### Sessao e permissao
+
+- [ ] Centralizar sessao em componente novo.
+- [ ] Validar renovacao de sessao.
+- [ ] Revisar tabela/fluxo `logon`.
+- [ ] Revisar permissoes por arquivo/programa.
+- [ ] Evitar confiar em `id_login` vindo por query string.
+- [ ] Padronizar logout e expiracao.
+
+### API e HTTP
+
+- [ ] Revisar CORS aberto em `api/header.php`.
+- [ ] Definir origens permitidas por configuracao.
+- [ ] Padronizar respostas JSON.
+- [ ] Padronizar status HTTP.
+- [ ] Validar payload JSON e parametros de query.
+- [ ] Criar camada de Request/Response para novas APIs.
+
+### Saida HTML
+
+- [ ] Escapar saida HTML com `htmlspecialchars()` ou view helpers.
+- [ ] Adicionar CSRF tokens em formularios criticos.
+- [ ] Evitar imprimir SQL/erros internos para usuario final.
 
 ---
 
-## Observação final
+## Fase 6 - Clean Code e PSR aplicados de forma incremental
 
-O projeto atual possui muitos arquivos misturando lógica, view e apresentação. A migração para PHP 8 deve ser feita em fases: primeiro compatibilidade, depois arquitetura e, por fim, aplicação completa de PSR e Clean Code.
+### Padroes para codigo novo
+
+- [ ] Usar PSR-12 em todo arquivo novo.
+- [ ] Usar PSR-4 e namespace em toda classe nova.
+- [ ] Usar nomes claros para classes, metodos e variaveis.
+- [ ] Evitar metodos longos.
+- [ ] Separar regra de negocio, acesso a dados e apresentacao.
+- [ ] Preferir injecao de dependencia a `global`.
+- [ ] Evitar acesso direto a superglobais dentro de servicos.
+
+### Refatoracao gradual do legado
+
+- [ ] Extrair funcoes de `funcoes.inc.php` para servicos quando forem tocadas.
+- [ ] Extrair HTML grande para views/templates quando o modulo for migrado.
+- [ ] Extrair JavaScript inline para arquivos proprios quando o modulo for migrado.
+- [ ] Trocar includes dinamicos por dependencias explicitas.
+- [ ] Evitar mudar comportamento junto com refatoracao estrutural, exceto em correcao de bug/seguranca.
+
+---
+
+## Fase 7 - Testes e protecao contra regressao
+
+### Testes iniciais
+
+- [ ] Criar estrutura `tests/`.
+- [ ] Criar teste para carregamento do autoload.
+- [ ] Criar teste para leitura de configuracao.
+- [ ] Criar teste para montagem de conexao PostgreSQL sem expor senha.
+- [ ] Criar testes unitarios para helpers novos.
+
+### Testes de caracterizacao do legado
+
+- [ ] Mapear comportamento atual de login.
+- [ ] Mapear comportamento atual de sessao expirada.
+- [ ] Mapear comportamento atual de permissao por usuario.
+- [ ] Mapear comportamento atual de uma consulta simples de paciente.
+- [ ] Mapear comportamento atual de agendamento basico.
+
+### Testes de integracao
+
+- [ ] Definir banco de teste ou estrategia de fixture.
+- [ ] Garantir que testes nao rodem contra banco de producao.
+- [ ] Criar testes para novos repositorios/classes de banco.
+- [ ] Criar testes para API modernizada.
+
+---
+
+## Fase 8 - Migração modular
+
+### Ordem sugerida
+
+- [ ] Infraestrutura: configuracao, bootstrap, banco, sessao.
+- [ ] Login e autenticacao.
+- [ ] Permissoes.
+- [ ] API.
+- [ ] Agendamento.
+- [ ] Paciente.
+- [ ] Farmacia e estoque.
+- [ ] Atendimento.
+- [ ] Prontuario.
+- [ ] Relatorios e impressoes.
+- [ ] E-SUS / exportacoes.
+
+### Criterio para migrar um modulo
+
+Para cada modulo escolhido:
+
+- [ ] Mapear arquivos envolvidos.
+- [ ] Mapar tabelas principais usadas.
+- [ ] Identificar entradas `GET`, `POST` e JSON.
+- [ ] Identificar queries de leitura.
+- [ ] Identificar queries de escrita.
+- [ ] Criar testes de caracterizacao quando possivel.
+- [ ] Extrair acesso a banco para classe/repository.
+- [ ] Extrair regra de negocio para service.
+- [ ] Centralizar validacao de entrada.
+- [ ] Escapar saida HTML.
+- [ ] Remover SQL interpolado.
+- [ ] Rodar testes e analise estatica no escopo migrado.
+
+---
+
+## Fase 9 - Arquivos de maior impacto para refatoracao inicial
+
+### Bootstrap e infraestrutura
+
+- [ ] `global.php`
+- [ ] `funcoes.db.php`
+- [ ] `funcoes.inc.php`
+- [ ] `config.inc.php`
+- [ ] `sessao_controller.php`
+
+### Login, sessao e permissao
+
+- [ ] `auth.php`
+- [ ] `auth_pass.php`
+- [ ] `auth_pass.Val.php`
+- [ ] `auth_pass.Erro.php`
+- [ ] `authlib.inc.php`
+- [ ] `api/login.php`
+
+### Compatibilidade PHP 8
+
+- [ ] `calendario.inc.php`
+- [ ] `apac_print_sesgunda_via.php`
+- [ ] `apac_print_.php`
+- [ ] `e-sus-on/ThriftCidadao.php`
+- [ ] `e-sus/ThriftCidadao.php`
+- [ ] `hiperdia/geralHiperdia.php`
+
+### Risco por `eval()` ou logica dinamica
+
+- [ ] `agendar_exame.php`
+- [ ] `medico.php`
+- [ ] `exame/buscaDatasDisponiveis.php`
+- [ ] `cad_lista_espera.php`
+- [ ] `fazer_agendamento.js.php`
+- [ ] `exame/exa_agendamento.js.php`
+- [ ] `farmacia/far_agendamento.js.php`
+
+### Apps externos/cidadao/profissional
+
+- [ ] `app-saude-cidadao.php`
+- [ ] `app-saude-profissional.php`
+
+---
+
+## Fase 10 - Documentacao operacional
+
+- [ ] Atualizar README com requisitos reais.
+- [ ] Documentar instalacao local.
+- [ ] Documentar dependencia com `WebSocialComum`.
+- [ ] Documentar configuracao do banco.
+- [ ] Documentar encoding esperado.
+- [ ] Documentar como rodar Composer.
+- [ ] Documentar como rodar testes.
+- [ ] Documentar como rodar PHPCS/PHPStan.
+- [ ] Documentar processo de migracao por modulo.
+- [ ] Atualizar `docs/` com instrucoes compatíveis com PHP 8.
+
+---
+
+## Comandos de inspeção sugeridos
+
+### Localizar funcoes removidas/perigosas
+
+```bash
+grep -R "session_register\|get_magic_quotes_gpc\|split(\|ereg_\|ereg(\|create_function\|eval(" .
+```
+
+### Rodar qualidade no codigo novo
+
+```bash
+composer cs
+composer analyse
+composer test
+```
+
+### Rodar ferramentas manualmente
+
+```bash
+phpcs --standard=PSR12 src tests
+phpstan analyse src tests --level=5
+vendor/bin/phpunit
+```
+
+---
+
+## Regra de ouro da migracao
+
+- [ ] Nao refatorar o projeto inteiro de uma vez.
+- [ ] Nao misturar grande refatoracao estrutural com mudanca de regra de negocio.
+- [ ] Priorizar seguranca e compatibilidade antes de limpeza estetica.
+- [ ] Criar componentes novos em `src/` e conectar o legado a eles gradualmente.
+- [ ] Migrar por modulo, com commits pequenos, testes e validacao manual do fluxo.
