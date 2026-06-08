@@ -41,7 +41,7 @@ if(empty($acao)) {
          <tr>
           <td>
            <fieldset>
-            <legend>Opções</legend>
+            <legend>OpÃ§Ãµes</legend>
              <table width=100% align=center cellspacing=3 cellpadding=0 border=0>
               <tr>
                <td width=79><a href=ambulatorio.php?id_login=$id_login><img src=".$_SESSION[linkroot].$_SESSION[comum]."imgs/voltar_on.gif border=0></a></td>
@@ -49,27 +49,27 @@ if(empty($acao)) {
                <td width=107><a href='logoff.php?id_login=$id_login' target='_parent'><img src=".$_SESSION[linkroot].$_SESSION[comum]."imgs/sair.gif border=0></a></td>
               </tr>
               <tr><td>&nbsp;</td>
-               <td> Lucio : este programa terá 3 telas , aqui estão duas telas</td>
+               <td> Lucio : este programa terÃ¡ 3 telas , aqui estÃ£o duas telas</td>
                <td>&nbsp;</td>
               </tr> 
               <tr><td>&nbsp;</td>
-               <td> ------- A 0(zero)  vai ter uma tela de pré-consulta, ou não terá a pré (medição da pressão e temperatura e os pneus) </td>
+               <td> ------- A 0(zero)  vai ter uma tela de pr-consulta, ou no ter a pr (medio da presso e temperatura e os pneus) </td>
                <td>&nbsp;</td>
               </tr>
               <tr><td>&nbsp;</td>
-               <td> ------- A 1 vai do Inicio até Encaminhamento      </td>
+               <td> ------- A 1 vai do Inicio atÃ© Encaminhamento      </td>
                <td>&nbsp;</td>
               </tr>
               <tr><td>&nbsp;</td>
-               <td> ------- A 2 vai de Procedimentos até Medicamentos </td>
+               <td> ------- A 2 vai de Procedimentos atÃ© Medicamentos </td>
                <td>&nbsp;</td>
               </tr>
               <tr><td>&nbsp;</td>
-               <td> ------- A 3  o Marco esta terminando , que é a Receita e os Itens_da_Receita .(ponto) </td>
+               <td> ------- A 3  o Marco esta terminando , que Ã© a Receita e os Itens_da_Receita .(ponto) </td>
                <td>&nbsp;</td>
               </tr>
               <tr><td>&nbsp;</td>
-               <td> -------         que devera ser parecidissimo ao da dispensação , podes fazer o manual </td>
+               <td> -------         que devera ser parecidissimo ao da dispensaÃ§Ã£o , podes fazer o manual </td>
                <td>&nbsp;</td>
               </tr>
              </table>
@@ -91,15 +91,15 @@ $uni = pg_fetch_array(pg_query("SELECT uni_desc FROM usuario, unidade
         <table width=100% cellspacing=0 cellpadding=2 border=0>
 	     <tr>
 	      <td width=30%>Nome:&nbsp;<b>".substr($usu[usu_nome],0,20)."</b></td>
-	      <td width=30%>Nome Mãe:&nbsp;<b>".substr($usu[usu_mae],0,20)."</b></td>
+	      <td width=30%>Nome MÃ£e:&nbsp;<b>".substr($usu[usu_mae],0,20)."</b></td>
           <td width=40% align=right><a href=$PHP_SELF?Show=ShortWind&acao=&id_login=$id_login&ate_codigo=$ate_codigo><font color=blue size=1>ultimas consultas</font></a></td>
 	     </tr>
 	     <tr>
 	      <td>Idade:&nbsp;<b>$usu[usu_datanasc] (".CalcIdade($usu[datanasc]).")</b> </td>
-	      <td>Profissão:&nbsp;<b>".substr($usu[usu_ocupacao],0,15)."</b> </td>
+	      <td>ProfissÃ£o:&nbsp;<b>".substr($usu[usu_ocupacao],0,15)."</b> </td>
 	     </tr>
 	     <tr>
-	      <td width=15% colspan=2>Pertece à Unidade:&nbsp;<b>".substr($uni[uni_codigo],0,20)."</b></td>
+	      <td width=15% colspan=2>Pertece Ã  Unidade:&nbsp;<b>".substr($uni[uni_codigo],0,20)."</b></td>
 	     </tr>
 	    </table>
        </fieldset>";
@@ -142,7 +142,7 @@ echo "   <td width=70%>&nbsp;</td>
 	     <td width=15% align=right><b>Acidente Trabalho:</b></td>
 	     <td align=center><select name=ate_acidentetrab class=box>
               <option value='S' $ca>Sim</option>
-              <option value='N' $cb>Não</option>
+              <option value='N' $cb>NÃ£o</option>
             </select>
          </td>
          <td width=65%>&nbsp;</td>
@@ -152,7 +152,7 @@ echo "   <td width=70%>&nbsp;</td>
         <table width=100% cellspacing=0 cellpadding=2 border=0>
          <tr>
 	      <td width=15%>&nbsp;</td>
-	      <td><b>Motivo do atendimento e descrição sumária do exame clínico:</b></td>
+	      <td><b>Motivo do atendimento e descriÃ§Ã£o sumÃ¡ria do exame clÃ­nico:</b></td>
 	     </tr>
 	     <tr>
 	      <td width=15%>&nbsp;</td>
@@ -171,7 +171,7 @@ echo "   <td width=70%>&nbsp;</td>
         <table width=100% cellspacing=0 cellpadding=2 border=0>
          <tr>
 	      <td width=15%>&nbsp;</td>
-	      <td><b>Diagnóstico:</b>(Descricao)</td>
+	      <td><b>DiagnÃ³stico:</b>(Descricao)</td>
 	     </tr>
 	     <tr>
 	      <td width=15%>&nbsp;</td>
@@ -191,7 +191,7 @@ echo "   <td width=70%>&nbsp;</td>
 	     </tr>
          <tr>
 	      <td width=15%>&nbsp;</td>
-	      <td><input name=ate_encaminhamento type=radio value='I' $i>&nbsp;Internação</td>
+	      <td><input name=ate_encaminhamento type=radio value='I' $i>&nbsp;InternaÃ§Ã£o</td>
 	     </tr>
          <tr>
 	      <td width=15%>&nbsp;</td>
@@ -199,7 +199,7 @@ echo "   <td width=70%>&nbsp;</td>
 	     </tr>
          <tr>
 	      <td width=15%>&nbsp;</td>
-	      <td><input name=ate_encaminhamento type=radio value='O' $o>&nbsp;Óbito</td>
+	      <td><input name=ate_encaminhamento type=radio value='O' $o>&nbsp;Ã“bito</td>
 	     </tr>
 	    </table>
 
@@ -213,7 +213,7 @@ echo "   <td width=70%>&nbsp;</td>
 	      <td><input type=submit value='NEXT STEP' class=box></td>
 	     </tr>
          <tr>
-	      <td colspan=2><font size=3 color=red>aqui termina a primeira tela e começa a 2 tela</font></td>
+	      <td colspan=2><font size=3 color=red>aqui termina a primeira tela e comeÃ§a a 2 tela</font></td>
 	     </tr>
 	    </table></form> ";
 

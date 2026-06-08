@@ -13,12 +13,6 @@
 		</table>
 		
 <br>
-<table width=713 cellspacing=0 cellpadding="0" border="0" align=center >
-      <tr>
-        <td><a href='http://187.109.195.18:8089/WebSocialProducao' target='_blank'><img src=imgs/banner.png border=0></a></td>
-        </tr>
-</table>
-		
 		
 		
 <?php 

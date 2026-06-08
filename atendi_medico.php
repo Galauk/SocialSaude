@@ -37,7 +37,7 @@ if(empty($acao)) {
          <tr>
           <td>
            <fieldset>
-            <legend>OpÁıes</legend>
+            <legend>Op√ß√µes</legend>
              <table width=100% align=center cellspacing=3 cellpadding=0 border=0>
               <tr>
                <td width=79><a href=ambulatorio.php?id_login=$id_login><img src=".$_SESSION[linkroot].$_SESSION[comum]."imgs/voltar_on.gif border=0></a></td>
@@ -67,7 +67,7 @@ $usu = pg_fetch_array(pg_query("select usu_datanasc as datanasc,to_char(usu_data
 	  <td>$usu[usu_nome]</td>
 	</tr>
 	 <tr>
-	  <td width=15% align=right><b>Profiss„o:</b></td>";
+	  <td width=15% align=right><b>Profiss√£o:</b></td>";
 	  echo ($usu[usu_ocupacao]=="")?"<td><input type=text name=usu_ocupacao value='$usu[usu_ocupacao]' class=box></td>":"<td>$usu[usu_ocupacao]</td>"; echo "
 	</tr>
 	 <tr>
@@ -75,11 +75,11 @@ $usu = pg_fetch_array(pg_query("select usu_datanasc as datanasc,to_char(usu_data
 	  <td>".CalcIdade($usu[datanasc])."</td>
 	</tr>
 	 <tr>
-	  <td width=15% align=right><b>Nome M„e:</b></td>";
+	  <td width=15% align=right><b>Nome M√£e:</b></td>";
 	  echo ($usu[usu_mae]=="")?"<td><input type=text name=usu_mae value='$usu[usu_mae]' class=box></td>":"<td>$usu[usu_mae]</td>"; echo "
 	</tr>
 	 <tr>
-	  <td width=15% align=right><b>Endereco:</b></td>";
+	  <td width=15% align=right><b>Endere√ßo:</b></td>";
 	  echo ($usu[usu_end_rua]=="")?"<td><input type=text name=usu_end_rua value='$usu[usu_end_rua]' class=box></td>":"<td>$usu[usu_end_rua]</td>"; echo "
 	</tr>
 	 <tr>
@@ -99,7 +99,7 @@ $usu = pg_fetch_array(pg_query("select usu_datanasc as datanasc,to_char(usu_data
 	  <td>$usu[usu_end_cidade]</td>
 	</tr>
 	 <tr>
-	  <td width=15% align=right><b>Pertece ‡ Unidade:</b></td>
+	  <td width=15% align=right><b>Pertece √† Unidade:</b></td>
 	  <td><select name=uni_usu class=box>";
        if($usu[uni_origem]=="") { echo "<option>...</option>"; }
 	  $sq = pg_query("select *from unidade");
@@ -140,13 +140,13 @@ $usu = pg_fetch_array(pg_query("select usu_datanasc as datanasc,to_char(usu_data
         <table width=100% cellspacing=0 cellpadding=2 border=0>
          <tr>
 	  <td width=15% align=right><b>Acidente Trabalho:</b></td>
-	  <td><select name=ate_acidentetrab class=box><option value='S' $ca>Sim</option><option value='N' $cb>N„o</option></select>
+	  <td><select name=ate_acidentetrab class=box><option value='S' $ca>Sim</option><option value='N' $cb>N√£o</option></select>
 	 </tr>
 	</table>
         <table width=100% cellspacing=0 cellpadding=2 border=0>
          <tr>
 	  <td width=15%>&nbsp;</td>
-	  <td><b>Motivo do atendimento e descriÁ„o sum·ria do exame clÌnico:</b></td>
+	  <td><b>Motivo do atendimento e descri√ß√£o sum√°ria do exame cl√≠nico:</b></td>
 	 </tr>
 	 <tr>
 	  <td width=15%>&nbsp;</td>
@@ -163,7 +163,7 @@ $usu = pg_fetch_array(pg_query("select usu_datanasc as datanasc,to_char(usu_data
         <table width=100% cellspacing=0 cellpadding=2 border=0>
          <tr>
 	  <td width=15%>&nbsp;</td>
-	  <td><b>DiagnÛstico:</b>(Descricao)</td>
+	  <td><b>Diagn√≥stico:</b>(Descricao)</td>
 	 </tr>
 	 <tr>
 	  <td width=15%>&nbsp;</td>
@@ -183,7 +183,7 @@ $usu = pg_fetch_array(pg_query("select usu_datanasc as datanasc,to_char(usu_data
 	 </tr>
          <tr>
 	  <td width=15%>&nbsp;</td>
-	  <td><input name=ate_encaminhamento type=radio value='I' $i>&nbsp;InternaÁ„o</td>
+	  <td><input name=ate_encaminhamento type=radio value='I' $i>&nbsp;Interna√ß√£o</td>
 	 </tr>
          <tr>
 	  <td width=15%>&nbsp;</td>
@@ -191,7 +191,7 @@ $usu = pg_fetch_array(pg_query("select usu_datanasc as datanasc,to_char(usu_data
 	 </tr>
          <tr>
 	  <td width=15%>&nbsp;</td>
-	  <td><input name=ate_encaminhamento type=radio value='O' $o>&nbsp;”bito</td>
+	  <td><input name=ate_encaminhamento type=radio value='O' $o>&nbsp;√ìbito</td>
 	 </tr>
 	</table>
 
