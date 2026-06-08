@@ -36,5 +36,13 @@ class UsuarioRepository
         ]);
     }
 
-    
+    public function listar(): array
+    {
+        $stmt = $this->db->query("SELECT * FROM usuarios");
+        $usuarios = [];
+        while ($data = $stmt->fetch()) {
+            $usuarios[] = new Usuario($data['id'], $data['nome'], $data['email']);
+        }
+        return $usuarios;
+    }
 }
