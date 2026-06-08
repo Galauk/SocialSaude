@@ -18,11 +18,27 @@ class Usuario
     /** @var Documento[] */
     private array $documentos = [];
 
-    public function __construct($id, $nome, $email, $senha) 
+    public function __construct($id, $nome, $email, ) 
     {
         $this->id = $id;
         $this->nome = $nome;
         $this->email = $email;
-        $this->senha = $senha;
     }
+
+    public function setSenha(string $senha): void
+    {
+        $this->senha = password_hash($senha, PASSWORD_BCRYPT);
+    }
+
+    public function adicionarDocumento(Documento $documento): void
+    {
+        $this->documentos[] = $documento;
+    }
+
+    public function getDocumentos(): array
+    {
+        return $this->documentos;
+    }
+
+
 }
