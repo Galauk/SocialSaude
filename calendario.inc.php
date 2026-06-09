@@ -84,9 +84,6 @@ class DataDB extends Data
 	function DataDB( $dia = null, $mes = null, $ano = null )
 	{
 		Data::Data( $dia, $mes, $ano );
-		session_start();
-		require_once $_SESSION[root].$_SESSION[comum]."library/php/db.inc.php";
-		require_once $_SESSION[root].$_SESSION[comum]."library/php/funcoes.db.php";
 		$stmt = "SELECT fer_nome FROM feriado WHERE fer_data = '{$this->dia}/{$this->mes}/{$this->ano}'";
 		$this->feriado 	    = db_get( $stmt );
 		$this->eh_feriado   = ( ! empty($this->feriado) );
@@ -163,7 +160,7 @@ class Calendario
 		for( $i = $dia_1w; $i <= $QTDE_DIAS[ $this->mes ] + $dia_1w - 1; $i++ )
 		{
 			$dia_atual++;
-			$this->Dias[ $i ] = & new DataDB( $dia_atual, $this->mes, $this->ano );
+			$this->Dias[ $i ] = new DataDB( $dia_atual, $this->mes, $this->ano );
 			$this->ptrUltimo = $i;
 		}
 		
@@ -172,7 +169,7 @@ class Calendario
 	/** percorrendo o array "enquanto tem dias..." */
 	function reset()
 	{ 
-		$this->contador = $this->ptrPrimeiro;
+		$this->_contador = $this->ptrPrimeiro;
 		return $this;
 	}
 	function temDias()

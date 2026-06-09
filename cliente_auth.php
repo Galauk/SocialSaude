@@ -1,16 +1,20 @@
 <?php
+/*
 require_once "global.php";
 include_once COMUM."/library/php/funcoes.inc.php";
 include_once SAUDE . '/__array.php';
+*/
 ?>
 
 <script language="JavaScript" type="text/javascript" src="ajax_motor.js"></script>
 
 <?php
+/*
 $form = new classForm();
 $common = new commonClass();
 $table = new tableClass();
 echo $common->incJquery();
+*/
 ?>
 
 <script>
@@ -120,9 +124,9 @@ if(!isset($_POST['cns_codigo'])) {
     	<img src="imgs/logoprosaude.png" width="430"/>
     </div>
   	<div style="position: absolute; top: 40%; left: 38%; text-align: center;">
-  			<span style='font-family:Monospace;color:#FFFFFF;font-size:26px'>Acesse sua posi&ccedil&atildeo na <br>
+  			<span style='font-family:Monospace;color:#FFFFFF;font-size:26px'>Acesse sua posição na <br>
   			Lista de Espera:</span><br><br>
-  			<div style="text-align= right; color:#FFF; font-size:16px; font-family:Monospace;">CNS (Cart&atildeo SUS): <input type=text nome="usu_cns" id="usu_cns" class='box' ><br></div>
+  			<div style="text-align= right; color:#FFF; font-size:16px; font-family:Monospace;">CNS (Cartão SUS): <input type=text nome="usu_cns" id="usu_cns" class='box' ><br></div>
         <br><br>
         <input type="button" value="ACESSAR" href="#" class="btn" onclick="validaCNS()"><br><br>
   			<img src='imgs/logoibitechbranco.png' style='vertical-align:middle' height='50'>
@@ -240,7 +244,7 @@ if(!isset($_POST['cns_codigo'])) {
 					<img src="imgs/logoprosaude.png" width="430"/>
 				</div>
 	            <div style="position: absolute; top:50%; left:25%; text-align: center;">
-	            <p style="font-weight: bold; font-size: 26px; color: #fff;">Desculpe! N&atildeo foi encontrado este usuario na lista de espera.<p>
+	            <p style="font-weight: bold; font-size: 26px; color: #fff;">Desculpe! Não foi encontrado este usuario na lista de espera.<p>
 	            </div>
 	            <div style="position: absolute; top: 55%; left: 45%;">
 	            <INPUT TYPE="button" onClick="history.go(0)" VALUE="VOLTAR" class="btn">

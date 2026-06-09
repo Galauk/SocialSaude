@@ -12,7 +12,7 @@
 $MES = date('n');
 $ANO = date('Y');
 $HOJE= date('d');
-$EXTENSO = array('Janeiro', 'Fevereiro', 'MarÁo', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro');
+$EXTENSO = array('Janeiro', 'Fevereiro', 'Mar√ßo', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro');
 $MES_ATUAL = $HOJE." de ".$EXTENSO[$MES-1]." de ".$ANO;
 
 if (isset($_GET['ms']) && $_GET['ms']>0 && $_GET['ms'] < 13) {
@@ -24,9 +24,9 @@ if (isset($_GET['an']) && $_GET['an']>0) {
 
 $MES_CAL = $EXTENSO[$MES-1]." / ".$ANO;
 
-$MINANO  = 5; //indica a quantidade de anos anterior ao atual o calend·rio ir· abranger
-$MAXANO  = 10; //indica a quantidade de anos devem estar disponÌveis no formul·rio
-//se maxano for menor ou igual a minano, n„o ser· exibido o calend·rio do ano corrente.
+$MINANO  = 5; //indica a quantidade de anos anterior ao atual o calend√°rio ir√° abranger
+$MAXANO  = 10; //indica a quantidade de anos devem estar dispon√≠veis no formul√°rio
+//se maxano for menor ou igual a minano, n√£o ser√° exibido o calend√°rio do ano corrente.
 //apenas o dos anos anteriores...
 
 
@@ -69,7 +69,7 @@ while ($LINHA <=41) {
 if(strlen($MES)<=1) { $NMES = "0".$MES; } else { $NMES = $MES; }
 $feriado = pg_fetch_array(pg_query("select *from feriado"));
 
-$fer = explode("-",$feriado[fer_data]);
+$fer = explode("-",$feriado["fer_data"]);
 $fer_dia = $fer[2];
 $fer_mes = $fer[1];
 $fer_ano = $fer[0];
@@ -90,7 +90,6 @@ if($data_A==$data_F) {
 ?>
 <html>
 <head>
-<title>Documento sem t&iacute;tulo</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
@@ -110,18 +109,12 @@ function ler() {
           <tr>
             <td width="200">
                 <select name="fmmes" id="select2" onChange="javascript: ler();" class=boxn>
-                  <option value="1"  <? if ($MES==1)  { echo "selected"; }?>>Janeiro</option>
-                  <option value="2"  <? if ($MES==2)  { echo "selected"; }?>>Fevereiro</option>
-                  <option value="3"  <? if ($MES==3)  { echo "selected"; }?>>Mar&ccedil;o</option>
-                  <option value="4"  <? if ($MES==4)  { echo "selected"; }?>>Abril</option>
-                  <option value="5"  <? if ($MES==5)  { echo "selected"; }?>>Maio</option>
-                  <option value="6"  <? if ($MES==6)  { echo "selected"; }?>>Junho</option>
-                  <option value="7"  <? if ($MES==7)  { echo "selected"; }?>>Julho</option>
-                  <option value="8"  <? if ($MES==8)  { echo "selected"; }?>>Agosto</option>
-                  <option value="9"  <? if ($MES==9)  { echo "selected"; }?>>Setembro</option>
-                  <option value="10" <? if ($MES==10) { echo "selected"; }?>>Outubro</option>
-                  <option value="11" <? if ($MES==11) { echo "selected"; }?>>Novembro</option>
-                  <option value="12" <? if ($MES==12) { echo "selected"; }?>>Dezembro</option>
+                  <?php 
+                  $cont = 1;
+                  foreach($MES as $mes){
+                  echo "<option value='".$cont."'  ".(($MES==$cont) ? "selected" : "").">".$EXTENSO[$cont-1]."</option>";
+                  $cont++;
+                  } ?>
                 </select>
               </td>
             <td width="200" align=right>
