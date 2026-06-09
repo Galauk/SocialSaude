@@ -68,7 +68,6 @@ $NomeMes = array(
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 	<link rel="shortcut icon" href="<?=$_SESSION['linkroot'].$_SESSION['comum']?>imgsBotoes/mini_logo_elotech.png"> 
-	<link href="fonts-proadmin.css" rel="stylesheet" type="text/css">
 	<link href="estilo.css" rel="stylesheet" type="text/css">
 	<style>
 		.inputForm {
@@ -170,7 +169,7 @@ function atualizaUnidade(){
 		<td height=57><?include_once $_SESSION['root'].$_SESSION['modulo']."menu.php"; ?></td>
 	</tr>
 	<tr style="background: #FFF;">
-		<td height="5"><img src="<?= $_SESSION['linkroot'].$_SESSION['comum'];?>imgs/listra_submenu.jpg" width="100%" height="5"></td>
+		<td height="5"></td>
 	</tr>
 <?php 
 	//	COME&ccedil;O IFRAME MEIO---------------------------------------------------------------->
