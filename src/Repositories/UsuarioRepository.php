@@ -17,7 +17,7 @@ class UsuarioRepository
     {
         $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE id = :codigo");
         $stmt->execute(['codigo' => $codigo]);
-        $data = $stmt->fetch();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($data) {
             return new Usuario($data['id'], $data['nome'], $data['email']);
@@ -39,6 +39,7 @@ class UsuarioRepository
     public function listar(): array
     {
         $stmt = $this->db->query("SELECT * FROM usuarios");
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $usuarios = [];
         while ($data = $stmt->fetch()) {
             $usuarios[] = new Usuario($data['id'], $data['nome'], $data['email']);

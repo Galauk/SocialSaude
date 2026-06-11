@@ -63,9 +63,15 @@ $router->get(
 );
 
 $router->post(
-    '/usuarios',
+    '/prosaude/usuarios',
     [UsuarioController::class, 'salvar'],
     [AuthMiddleware::class,SessionMiddleware::class]
+);
+
+$router->get(
+    '/prosaude/logout',
+    [AuthController::class, 'logout'],
+    [AuthMiddleware::class]
 );
 
 $router->get(

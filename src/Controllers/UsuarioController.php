@@ -8,9 +8,9 @@ use App\Core\View;
 class UsuarioController
 {
     private UsuarioService $service;
-    public function __construct()
+    public function __construct(UsuarioService $service)
     {
-        $this->service = new UsuarioService();
+        $this->service = $service;
     }
 
     public function listar()
@@ -36,6 +36,27 @@ class UsuarioController
             ],
             'app'
         );
+    }
+
+    public function salvar()
+    {
+        $id = $_POST['id'] ?? null;
+        $nome = $_POST['nome'] ?? '';
+        $email = $_POST['email'] ?? '';
+
+        if (empty($id) || empty($nome) || empty($email)) {
+            header('Location: /prosaude/usuarios?erro=campos_obrigatorios');
+            exit;
+        }
+
+        try {
+            $usuario = $this->service->criarUsuario($id, $nome, $email);
+            header('Location: /prosaude/usuarios?sucesso=usuario_criado');
+        } catch (\Exception $e) {
+            header('Location: /prosaude/usuarios?erro=' . urlencode($e->getMessage()));
+        }
+
+        exit;
     }
 
 }
