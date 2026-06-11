@@ -1,2 +1,3 @@
 <?php
 ?>
+Dentro do sistema, o dashboard é a área onde os usuários autenticados podem acessar informações e funcionalidades específicas do sistema. Ele pode incluir gráficos, tabelas, notificações e outras informações relevantes para o usuário. O dashboard é uma parte importante do sistema, pois permite que os usuários tenham uma visão geral de suas atividades e possam acessar rapidamente as funcionalidades mais importantes.

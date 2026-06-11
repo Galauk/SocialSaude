@@ -2,6 +2,7 @@
 
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
+use App\Controllers\HomeController;
 use App\Controllers\UsuarioController;
 
 use App\Middleware\AuthMiddleware;
@@ -19,10 +20,17 @@ if(!isset($router)) {
 
 $router->get(
     '/',
-    [AuthController::class, 'login']
+    [HomeController::class, 'index']
 );
+
+
 $router->get(
-    '/prosaude/',
+    '/sobre',
+    [HomeController::class, 'sobre']
+);
+
+$router->get(
+    '/login',
     [AuthController::class, 'login']
 );
 
@@ -30,18 +38,17 @@ $router->post(
     '/autenticar',
     [AuthController::class, 'autenticar']
 );
-/*
-$router->get(
-    '/sobre',
-    [HomeController::class, 'sobre']
-);
-*/
 
 /*
 |--------------------------------------------------------------------------
 | Rotas Protegidas
 |--------------------------------------------------------------------------
 */
+$router->get(
+    '/prosaude',
+    [DashboardController::class, 'index'],
+    [AuthMiddleware::class,SessionMiddleware::class]
+);
 
 $router->get(
     '/prosaude/dashboard',
@@ -50,7 +57,7 @@ $router->get(
 );
 
 $router->get(
-    '/usuarios',
+    '/prosaude/usuarios',
     [UsuarioController::class, 'listar'],
     [AuthMiddleware::class,SessionMiddleware::class]
 );

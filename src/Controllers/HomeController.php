@@ -9,7 +9,18 @@ class HomeController
          View::render(
             'home/index',
             [
-                'title' => 'SocialSaúde'
+                'title' => 'ProSaúde'
+            ],
+            'public'
+        );
+    }
+
+    public function sobre() : void
+    {
+         View::render(
+            'home/sobre',
+            [
+                'title' => 'Sobre o ProSaúde'
             ],
             'public'
         );

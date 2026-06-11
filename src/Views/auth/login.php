@@ -8,7 +8,7 @@
     </head>
     <body>
         <h1>Login</h1>
-        <form action="?rota=autenticar" method="POST">
+        <form action="/autenticar" method="POST">
             <label for="email">Email:</label>
             <input type="email" name="email" id="email" required>
             <br>

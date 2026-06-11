@@ -1,9 +1,9 @@
-<h1>Bem-vindo ao SocialSaúde</h1>
+<h1>Bem-vindo ao ProSaúde</h1>
 
 <p>
     Sistema de gestão de saúde pública.
 </p>
 
-<a href="<?= url('/login') ?>">
+<a href="<?= url('/prosaude') ?>">
     Entrar no sistema
 </a>

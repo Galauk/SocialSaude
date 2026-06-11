@@ -3,19 +3,19 @@
     <ul>
 
         <li>
-            <a href="/dashboard">
+            <a href="<?=url('/prosaude/dashboard')?>">
                 Dashboard
             </a>
         </li>
 
         <li>
-            <a href="/usuarios">
+            <a href="<?=url('/prosaude/usuarios')?>">
                 Usuários
             </a>
         </li>
 
         <li>
-            <a href="/documentos">
+            <a href="<?=url('/prosaude/documentos')?>">
                 Documentos
             </a>
         </li>

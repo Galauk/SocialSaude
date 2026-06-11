@@ -1,10 +1,17 @@
 <?php
 namespace App\Controllers;
+use App\Core\View;
 
 class DashboardController 
 {
     public function index()
     {
-        require __DIR__ . '../Views/dashboard/index.php';
+        View::render(
+            'dashboard/index',
+            [
+                'title' => 'ProSaúde'
+            ],
+            'app'
+        );
     }
 }
