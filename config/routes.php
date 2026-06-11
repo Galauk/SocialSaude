@@ -3,11 +3,13 @@
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\UsuarioController;
-use App\Middleware\AuthMiddleware;
-use App\Application;
 
-$app = new Application();
-$router = $app->getRouter();
+use App\Middleware\AuthMiddleware;
+use App\Middleware\SessionMiddleware;
+
+if(!isset($router)) {
+    die('Acesso negado');
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +21,8 @@ $router->get(
     '/',
     [AuthController::class, 'login']
 );
-
 $router->get(
-    '/login',
+    '/prosaude/',
     [AuthController::class, 'login']
 );
 
@@ -43,7 +44,7 @@ $router->get(
 */
 
 $router->get(
-    '/dashboard',
+    '/prosaude/dashboard',
     [DashboardController::class, 'index'],
     [AuthMiddleware::class,SessionMiddleware::class]
 );

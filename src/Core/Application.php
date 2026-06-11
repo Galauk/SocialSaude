@@ -23,7 +23,9 @@ class Application
 
     public function run(): void
     {
-        require __DIR__ . './../config/routes.php';
+        $router = $this->router;
+
+        require dirname(__DIR__, 2) . '/config/routes.php';
 
         $this->router->dispatch();
     }

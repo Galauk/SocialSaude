@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Controllers;
+use App\Core\View;
 
 class AuthController 
 {
     public function login()
     {
-        require __DIR__ . '../Views/auth/login.php';
+        View::render('auth/login');
     }
 }

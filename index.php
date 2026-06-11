@@ -10,8 +10,6 @@ require __DIR__ . '/public/index.php';
 	
 	include_once $_SESSION['root'].$_SESSION['modulo']."authlib.inc.php";
 	require_once $_SESSION['root'] . $_SESSION['modulo'] . "sessao_controller.php";
-*/
-die();
 $unidades = array(
 	['id' => 1, 'desc' => 'Unidade 1'],
 	['id' => 2, 'desc' => 'Unidade 2'],
@@ -127,7 +125,6 @@ function atualizaUnidade(){
 				// -> Menu Superior
 				include_once $_SESSION['root'].$_SESSION['modulo']."novoMenu.php";
 			
-			*/
 			?>
 		</td>
 	</tr>
@@ -200,7 +197,6 @@ $sqlSetor = "SELECT * FROM setor s
                AND s.uni_codigo = {$res['uni_codigo']}
 		 ORDER BY set_nome";
 $querySet = pg_query($sqlSetor);
-*/
 ?>
 	<tr>
 		<td height="24">
@@ -251,7 +247,6 @@ $querySet = pg_query($sqlSetor);
 						  $resultadoDadosRegistro = pg_fetch_array($exeDadosRegistro);
 						  $dias = $resultadoDadosRegistro['dias'];
 						  echo "<i><font color=#FFE400>".utf8_decode($resultadoDadosRegistro['conf_valor_string'])."</font></i>";
-						*/
 						?>
 
 					</td>
@@ -285,7 +280,6 @@ $pegaSetor = "select * from usuarios_setores as ususet
 				      where ususet.usr_codigo = {$id_login}";
 $querySetor = pg_query($pegaSetor);
 $qnt = pg_num_rows($querySetor);
-*/
 
 ?>
 <?php
@@ -295,7 +289,6 @@ $stmt_msg = "SELECT COUNT(msg_codigo) ".
     "FROM mensagem ".
     "WHERE usr_codigo_to = {$id_login} AND msg_copy = 'N' AND msg_dt_lida IS NULL ";
 $total = (int) db_get($stmt_msg);
-*/
 $total = 0;
 if( $total > 0 )
 {
@@ -314,3 +307,4 @@ if( $total > 0 )
 ?>
 </body>
 </html>
+*/
