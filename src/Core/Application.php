@@ -23,7 +23,7 @@ class Application
 
     public function run(): void
     {
-        require __DIR__ . '/../config/routes.php';
+        require __DIR__ . './../config/routes.php';
 
         $this->router->dispatch();
     }

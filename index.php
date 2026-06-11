@@ -1,7 +1,8 @@
 <?php
 
-	session_start();
-/*
+
+require __DIR__ . '/public/index.php';
+	/*
 	include_once $_SESSION['root'].$_SESSION['comum']."library/php/db.inc.php";
 	
 	include_once $_SESSION['root'].$_SESSION['comum']."library/php/funcoes.inc.php";
@@ -10,7 +11,7 @@
 	include_once $_SESSION['root'].$_SESSION['modulo']."authlib.inc.php";
 	require_once $_SESSION['root'] . $_SESSION['modulo'] . "sessao_controller.php";
 */
-
+die();
 $unidades = array(
 	['id' => 1, 'desc' => 'Unidade 1'],
 	['id' => 2, 'desc' => 'Unidade 2'],

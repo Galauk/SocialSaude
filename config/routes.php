@@ -45,19 +45,19 @@ $router->get(
 $router->get(
     '/dashboard',
     [DashboardController::class, 'index'],
-    [AuthMiddleware::class]
+    [AuthMiddleware::class,SessionMiddleware::class]
 );
 
 $router->get(
     '/usuarios',
     [UsuarioController::class, 'listar'],
-    [AuthMiddleware::class]
+    [AuthMiddleware::class,SessionMiddleware::class]
 );
 
 $router->post(
     '/usuarios',
     [UsuarioController::class, 'salvar'],
-    [AuthMiddleware::class]
+    [AuthMiddleware::class,SessionMiddleware::class]
 );
 
 $router->get(
